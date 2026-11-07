@@ -1,0 +1,726 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#071426">
+<title>NexusBlatter 3D - Anime Battle Royale</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:radial-gradient(circle at top,#164d75,#06101e 65%);
+ color:white;
+ min-height:100vh;
+ text-align:center;
+}
+.screen{
+ display:none;
+ min-height:100vh;
+ padding:25px 15px;
+ align-items:center;
+ justify-content:center;
+ flex-direction:column;
+}
+.screen.active{display:flex}
+.logo{
+ font-size:clamp(35px,9vw,65px);
+ font-weight:1000;
+ color:#21e7ff;
+ text-shadow:0 0 18px #00bfff;
+}
+.subtitle{
+ color:#ffd83d;
+ font-weight:bold;
+ letter-spacing:4px;
+ margin:15px 0 35px;
+}
+button{
+ border:0;
+ border-radius:12px;
+ padding:16px 25px;
+ font-size:17px;
+ font-weight:bold;
+ cursor:pointer;
+ color:#061426;
+ background:linear-gradient(90deg,#19e5ff,#ffd52d);
+ box-shadow:0 0 15px #00cfff66;
+ margin:10px;
+}
+button:active{transform:scale(.96)}
+h2{color:#25eaff}
+.characters{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(130px,1fr));
+ gap:13px;
+ width:100%;
+ max-width:500px;
+}
+.character{
+ background:#102941;
+ border:2px solid #286080;
+ border-radius:15px;
+ padding:12px;
+ cursor:pointer;
+}
+.character.selected{
+ border:3px solid #ffe12e;
+ background:#164b63;
+ box-shadow:0 0 18px #00dfff;
+}
+.character .portrait{
+ height:115px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:75px;
+}
+.character strong{display:block;margin:8px}
+.character small{color:#a9d9ee}
+#chosen{color:#ffe12e;font-size:19px}
+.note{color:#a9c9dd;font-size:13px}
+</style>
+</head>
+
+<body>
+
+<!-- TELA INICIAL -->
+<section id="inicio" class="screen active">
+ <div class="logo">NEXUSBLATTER 3D</div>
+ <div class="subtitle">ANIME BATTLE ROYALE</div>
+ <p>Prepare-se para entrar no universo dos animes!</p>
+ <button onclick="abrirSelecao()">ENTRAR NO JOGO</button>
+</section>
+
+<!-- ESCOLHA DE PERSONAGEM -->
+<section id="selecao" class="screen">
+ <h1>ESCOLHA SEU PERSONAGEM</h1>
+ <p>Selecione seu guerreiro favorito</p>
+
+ <div class="characters">
+
+  <div class="character selected" onclick="selecionar(this,'Naruto')">
+   <div class="portrait">🍥</div>
+   <strong>NARUTO</strong>
+   <small>Ninja lendário</small>
+  </div>
+
+  <div class="character" onclick="selecionar(this,'Luffy')">
+   <div class="portrait">🏴‍☠️</div>
+   <strong>LUFFY</strong>
+   <small>Rei dos piratas</small>
+  </div>
+
+  <div class="character" onclick="selecionar(this,'Zoro')">
+   <div class="portrait">⚔️</div>
+   <strong>ZORO</strong>
+   <small>Espadachim</small>
+  </div>
+
+  <div class="character" onclick="selecionar(this,'Nami')">
+   <div class="portrait">🌩️</div>
+   <strong>NAMI</strong>
+   <small>Navegadora</small>
+  </div>
+
+  <div class="character" onclick="selecionar(this,'Sasuke')">
+   <div class="portrait">⚡</div>
+   <strong>SASUKE</strong>
+   <small>Ninja poderoso</small>
+  </div>
+
+  <div class="character" onclick="selecionar(this,'Guerreiro Nexus')">
+   <div class="portrait">🔥</div>
+   <strong>GUERREIRO NEXUS</strong>
+   <small>Guerreiro original</small>
+  </div>
+
+ </div>
+
+ <p>Personagem escolhido: <span id="chosen">Naruto</span></p>
+
+ <button onclick="confirmar()">CONFIRMAR PERSONAGEM</button>
+ <button onclick="voltar()">VOLTAR</button>
+</section>
+
+<!-- PERSONAGEM CONFIRMADO -->
+<section id="confirmado" class="screen">
+ <h1>PERSONAGEM CONFIRMADO!</h1>
+ <div class="logo" style="font-size:35px" id="nomeFinal">NARUTO</div>
+ <p>Seu guerreiro está preparado!</p>
+ <button onclick="jogar()">JOGAR</button>
+ <button onclick="abrirSelecao()">TROCAR PERSONAGEM</button>
+</section>
+
+<script>
+let personagem="Naruto";
+
+function mostrar(id){
+ document.querySelectorAll(".screen").forEach(t=>{
+  t.classList.remove("active");
+ });
+ document.getElementById(id).classList.add("active");
+}
+
+function abrirSelecao(){
+ mostrar("selecao");
+}
+
+function selecionar(elemento,nome){
+ personagem=nome;
+ document.querySelectorAll(".character").forEach(c=>{
+  c.classList.remove("selected");
+ });
+ elemento.classList.add("selected");
+ document.getElementById("chosen").textContent=nome;
+}
+
+function voltar(){
+ mostrar("inicio");
+}
+
+function confirmar(){
+ document.getElementById("nomeFinal").textContent=personagem;
+ mostrar("confirmado");
+}
+
+function jogar(){
+ alert("Personagem "+personagem+" selecionado! A próxima etapa será conectar esta tela à batalha 3D.");
+}
+</script>
+
+</body>
+</html>
+="hud">
+ <div id="topo">
+  <div class="painel">❤️ VIDA<div id="barraFundo"><div id="barraVida"></div></div></div>
+  <div class="painel" id="pontos">Pontos: 0</div>
+  <div class="painel" id="inimigosTexto">Inimigos: 8</div>
+  <div class="painel" id="municao">12 / 60</div>
+ </div>
+ <div class="painel" id="ajuda">Derrote todos os adversários!</div>
+</div>
+
+<canvas id="minimapa" width="100" height="100"></canvas>
+<div id="miraVisual"><div id="miralinha1"></div><div id="miralinha2"></div></div>
+
+<div id="controles">
+ <div id="joystick"><div id="pino"></div></div>
+ <div class="botoes">
+  <button class="btn" id="btnPulo">PULAR</button>
+  <div class="linha">
+   <button class="btn" id="btnMira">MIRA</button>
+   <button class="btn" id="btnEspecial">PODER</button>
+  </div>
+  <div class="linha">
+   <button class="btn" id="btnRecarga">RECARREGAR</button>
+   <button class="btn" id="btnAtaque">ATIRAR</button>
+  </div>
+ </div>
+</div>
+
+<div id="mensagem">
+ <div id="caixa">
+  <h1>NEXUSBLATTER 3D</h1>
+  <p>ANIME BATTLE ROYALE — V2.0</p>
+  <p>Escolha seu personagem:</p>
+  <div class="herois">
+   <button class="heroi selecionado" data-heroi="Nexus">⚡ NEXUS</button>
+   <button class="heroi" data-heroi="Akira">🔥 AKIRA</button>
+   <button class="heroi" data-heroi="Kai">❄️ KAI</button>
+   <button class="heroi" data-heroi="Ren">🌟 REN</button>
+  </div>
+  <p>Explore o mapa, use sua arma e vença a batalha!</p>
+  <button id="jogar">ENTRAR NO JOGO</button>
+ </div>
+</div>
+
+<script type="module">
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
+
+const game=document.getElementById("game");
+const cena=new THREE.Scene();
+cena.background=new THREE.Color(0x91c9e8);
+cena.fog=new THREE.Fog(0x91c9e8,55,145);
+
+const camera=new THREE.PerspectiveCamera(65,innerWidth/innerHeight,.1,250);
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
+renderer.setSize(innerWidth,innerHeight);
+renderer.shadowMap.enabled=true;
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1;
+game.appendChild(renderer.domElement);
+
+cena.add(new THREE.HemisphereLight(0xdaf3ff,0x52613b,2));
+const sol=new THREE.DirectionalLight(0xffffff,2);
+sol.position.set(-25,45,20);
+sol.castShadow=true;
+sol.shadow.mapSize.set(1024,1024);
+cena.add(sol);
+
+const mat=(c,r=.8)=>new THREE.MeshStandardMaterial({color:c,roughness:r});
+const verde=mat(0x438b43),tronco=mat(0x70452b);
+const folhas=mat(0x207d45),parede=mat(0xd1b68b);
+const telhado=mat(0x87483d);
+
+function adicionar(geo,m,x,y,z){
+ const o=new THREE.Mesh(geo,m);
+ o.position.set(x,y,z);
+ o.castShadow=true;o.receiveShadow=true;
+ cena.add(o);return o;
+}
+
+adicionar(new THREE.PlaneGeometry(180,180),verde,0,0,0).rotation.x=-Math.PI/2;
+const grade=new THREE.GridHelper(180,45,0x315f36,0x57844a);
+grade.position.y=.025;cena.add(grade);
+
+function caixa(w,h,d,m,x,y,z){
+ return adicionar(new THREE.BoxGeometry(w,h,d),m,x,y,z);
+}
+function arvore(x,z){
+ const g=new THREE.Group();
+ const t=new THREE.Mesh(new THREE.CylinderGeometry(.25,.4,2.2,9),tronco);
+ t.position.y=1.1;g.add(t);
+ const f=new THREE.Mesh(new THREE.ConeGeometry(1.6,3.5,9),folhas);
+ f.position.y=3.3;g.add(f);
+ t.castShadow=f.castShadow=true;
+ g.position.set(x,0,z);cena.add(g);
+}
+function casa(x,z){
+ caixa(7,3.5,6,parede,x,1.75,z);
+ const tel=caixa(8,1,7,telhado,x,4,z);
+ tel.rotation.z=.08;
+ caixa(1.4,2.2,.15,tronco,x,1.1,z-3.08);
+ const janela=mat(0x7bd7ec,.3);
+ caixa(1.2,1.1,.2,janela,x-2,2,z-3.1);
+ caixa(1.2,1.1,.2,janela,x+2,2,z-3.1);
+}
+for(let i=0;i<65;i++){
+ const x=(Math.random()-.5)*150,z=(Math.random()-.5)*150;
+ if(Math.abs(x)<14&&Math.abs(z)<14)continue;
+ arvore(x,z);
+}
+casa(-23,-18);casa(24,-24);casa(-30,25);
+casa(31,26);casa(5,39);casa(-48,-3);
+
+caixa(9,.08,150,mat(0xb7a47a),0,.06,0);
+
+const cores={Nexus:0x16b9e9,Akira:0xe74c3c,Kai:0x55aaff,Ren:0xd8bd45};
+let heroiEscolhido="Nexus";
+let jogador=null;
+let inimigos=[];
+let vida=100,pontos=0,municao=12,reserva=60;
+let iniciou=false,acabou=false,recarregando=false,mira=false;
+let pulando=false,velocidadePulo=0;
+let tempoAtaque=0,tempoEspecial=0;
+let cameraAngulo=0,cameraArrastando=false,ultimoX=0;
+let joystickAtivo=false,joystickId=null;
+let deslocamento={x:0,y:0};
+const teclas={};
+const relogio=new THREE.Clock();
+const raycaster=new THREE.Raycaster();
+const centro=new THREE.Vector2(0,0);
+const temporizador=new THREE.Clock();
+
+function criarHumano(cor,inimigo=false){
+ const g=new THREE.Group();
+ const pele=mat(inimigo?0xd4a17e:0xffd0a5);
+ const roupa=mat(cor);
+ const roupaEscura=mat(inimigo?0x3d1a29:0x202b43);
+ const cabelo=mat(inimigo?0x27202a:0x20202b);
+
+ function parte(geo,m,x,y,z){
+  const o=new THREE.Mesh(geo,m);
+  o.position.set(x,y,z);o.castShadow=true;
+  g.add(o);return o;
+ }
+
+ // Tronco e roupa
+ parte(new THREE.CapsuleGeometry(.48,.75,6,12),roupa,0,1.3,0);
+ parte(new THREE.SphereGeometry(.49,16,12),roupa,0,1.72,0);
+ parte(new THREE.SphereGeometry(.35,16,12),pele,0,2.12,0);
+
+ // Cabelo e rosto
+ parte(new THREE.SphereGeometry(.39,16,12),cabelo,0,2.35,0);
+ parte(new THREE.BoxGeometry(.52,.08,.12),cabelo,0,2.19,.28);
+ const olhoMat=mat(inimigo?0xff3333:0x20202b);
+ parte(new THREE.SphereGeometry(.045,8,8),olhoMat,-.13,2.13,.32);
+ parte(new THREE.SphereGeometry(.045,8,8),olhoMat,.13,2.13,.32);
+
+ // Pernas articuladas
+ const pernas=[];
+ for(const lado of [-1,1]){
+  const perna=new THREE.Group();
+  perna.position.set(lado*.21,.95,0);
+  const p=new THREE.Mesh(new THREE.CapsuleGeometry(.16,.58,5,9),roupaEscura);
+  p.position.y=-.35;p.castShadow=true;perna.add(p);
+  const pe=new THREE.Mesh(new THREE.BoxGeometry(.28,.16,.42),mat(0x20242b));
+  pe.position.set(0,-.72,.1);perna.add(pe);
+  g.add(perna);pernas.push(perna);
+ }
+
+ // Braços articulados
+ const bracos=[];
+ for(const lado of [-1,1]){
+  const braco=new THREE.Group();
+  braco.position.set(lado*.52,1.68,0);
+  const b=new THREE.Mesh(new THREE.CapsuleGeometry(.14,.58,5,9),roupa);
+  b.position.y=-.32;b.rotation.z=lado*.12;
+  b.castShadow=true;braco.add(b);
+  const mao=new THREE.Mesh(new THREE.SphereGeometry(.13,10,8),pele);
+  mao.position.set(0,-.68,.02);braco.add(mao);
+  g.add(braco);bracos.push(braco);
+ }
+
+ // Arma visual
+ if(!inimigo){
+  const arma=mat(0x252c34,.35);
+  const corpoArma=new THREE.Mesh(new THREE.BoxGeometry(.15,.15,.65),arma);
+  corpoArma.position.set(.55,1.3,.35);g.add(corpoArma);
+  const cano=new THREE.Mesh(new THREE.CylinderGeometry(.035,.035,.42,8),arma);
+  cano.rotation.x=Math.PI/2;
+  cano.position.set(.55,1.3,.76);g.add(cano);
+ }
+
+ g.userData={pernas,bracos};
+ cena.add(g);
+ return g;
+}
+
+function criarInimigo(x,z){
+ const g=criarHumano(0x9e3448,true);
+ g.position.set(x,0,z);
+ const barra=new THREE.Group();
+ const fundo=new THREE.Mesh(new THREE.PlaneGeometry(1.2,.12),mat(0x333333));
+ const frente=new THREE.Mesh(new THREE.PlaneGeometry(1.15,.09),mat(0x38e35c));
+ frente.position.z=.01;
+ barra.add(fundo,frente);
+ barra.position.y=2.9;
+ g.add(barra);
+ return {obj:g,vida:100,vivo:true,vel:2.1,ataque:0,barra:frente,anim:Math.random()*5};
+}
+
+function atualizarHUD(){
+ document.getElementById("barraVida").style.width=Math.max(0,vida)+"%";
+ document.getElementById("pontos").textContent="Pontos: "+pontos;
+ document.getElementById("inimigosTexto").textContent=
+ "Inimigos: "+inimigos.filter(e=>e.vivo).length;
+ document.getElementById("municao").textContent=municao+" / "+reserva;
+}
+
+function mensagemFim(vitoria){
+ acabou=true;
+ document.getElementById("mensagem").style.display="flex";
+ document.getElementById("caixa").innerHTML=`
+ <h1>${vitoria?"VOCÊ VENCEU!":"FIM DE JOGO"}</h1>
+ <p>${vitoria?"Parabéns! Você derrotou todos os adversários!":"Sua aventura terminou. Tente novamente!"}</p>
+ <p>Pontuação: <b>${pontos}</b></p>
+ <button id="jogar">JOGAR NOVAMENTE</button>`;
+ document.getElementById("jogar").addEventListener("click",reiniciar);
+ document.getElementById("controles").style.display="none";
+ document.getElementById("hud").style.display="none";
+ document.getElementById("minimapa").style.display="none";
+ document.getElementById("miraVisual").style.display="none";
+}
+
+function reiniciar(){
+ if(jogador)cena.remove(jogador);
+ inimigos.forEach(e=>cena.remove(e.obj));
+ inimigos=[];
+ vida=100;pontos=0;municao=12;reserva=60;
+ acabou=false;iniciou=true;recarregando=false;
+ pulando=false;velocidadePulo=0;
+ tempoAtaque=0;tempoEspecial=0;
+ mira=false;
+ jogador=criarHumano(cores[heroiEscolhido]);
+ jogador.position.set(0,0,0);
+
+ for(let i=0;i<8;i++){
+  const ang=Math.random()*Math.PI*2;
+  const dist=23+Math.random()*30;
+  inimigos.push(criarInimigo(Math.cos(ang)*dist,Math.sin(ang)*dist));
+ }
+ document.getElementById("mensagem").style.display="none";
+ document.getElementById("hud").style.display="block";
+ document.getElementById("controles").style.display="block";
+ document.getElementById("minimapa").style.display="block";
+ document.getElementById("ajuda").textContent="Derrote todos os adversários!";
+ document.getElementById("miraVisual").style.display="none";
+ document.getElementById("btnMira").textContent="MIRA";
+ cameraAngulo=0;
+ atualizarHUD();
+}
+
+document.querySelectorAll(".heroi").forEach(b=>{
+ b.addEventListener("click",()=>{
+  heroiEscolhido=b.dataset.heroi;
+  document.querySelectorAll(".heroi").forEach(x=>x.classList.remove("selecionado"));
+  b.classList.add("selecionado");
+ });
+});
+document.getElementById("jogar").addEventListener("click",reiniciar);
+
+function atacar(){
+ if(!iniciou||acabou||recarregando)return;
+ if(performance.now()-tempoAtaque<300)return;
+ if(municao<=0){
+  document.getElementById("ajuda").textContent="Sem munição! Recarregue.";
+  return;
+ }
+ tempoAtaque=performance.now();
+ municao--;
+
+ // Disparo na direção do centro da tela
+ camera.updateMatrixWorld();
+ raycaster.setFromCamera(centro,camera);
+ const alvos=[];
+ inimigos.forEach(e=>{
+  if(e.vivo)e.obj.traverse(o=>{if(o.isMesh)alvos.push(o)});
+ });
+ const acertos=raycaster.intersectObjects(alvos,false);
+ let atingido=false;
+
+ if(acertos.length){
+  const objeto=acertos[0].object;
+  const inimigo=inimigos.find(e=>e.vivo&&e.obj.getObjectById(objeto.id));
+  if(inimigo){
+   inimigo.vida-=34;
+   pontos+=10;
+   atingido=true;
+   inimigo.barra.scale.x=Math.max(0,inimigo.vida/100);
+   if(inimigo.vida<=0){
+    inimigo.vivo=false;
+    inimigo.obj.visible=false;
+    pontos+=90;
+    document.getElementById("ajuda").textContent="Adversário derrotado!";
+   }
+  }
+ }
+ if(!atingido)document.getElementById("ajuda").textContent="Disparo realizado!";
+ atualizarHUD();
+ if(inimigos.every(e=>!e.vivo))mensagemFim(true);
+}
+
+function recarregar(){
+ if(!iniciou||acabou||recarregando||municao===12||reserva<=0)return;
+ recarregando=true;
+ document.getElementById("ajuda").textContent="Recarregando...";
+ setTimeout(()=>{
+  if(acabou)return;
+  const quantidade=Math.min(12-municao,reserva);
+  municao+=quantidade;reserva-=quantidade;
+  recarregando=false;
+  atualizarHUD();
+  document.getElementById("ajuda").textContent="Arma recarregada!";
+ },1300);
+}
+
+function especial(){
+ if(!iniciou||acabou||performance.now()-tempoEspecial<4500)return;
+ tempoEspecial=performance.now();
+ inimigos.forEach(e=>{
+  if(e.vivo&&jogador.position.distanceTo(e.obj.position)<9){
+   e.vida-=65;pontos+=20;
+   e.barra.scale.x=Math.max(0,e.vida/100);
+   if(e.vida<=0){
+    e.vivo=false;e.obj.visible=false;pontos+=80;
+   }
+  }
+ });
+ document.getElementById("ajuda").textContent="PODER ESPECIAL!";
+ atualizarHUD();
+ if(inimigos.every(e=>!e.vivo))mensagemFim(true);
+}
+
+function pular(){
+ if(!iniciou||acabou||pulando)return;
+ pulando=true;velocidadePulo=7;
+}
+
+function alternarMira(){
+ mira=!mira;
+ camera.fov=mira?48:65;
+ camera.updateProjectionMatrix();
+ document.getElementById("miraVisual").style.display=mira?"block":"none";
+ document.getElementById("btnMira").textContent=mira?"SAIR MIRA":"MIRA";
+}
+
+document.getElementById("btnAtaque").addEventListener("pointerdown",e=>{e.preventDefault();atacar()});
+document.getElementById("btnEspecial").addEventListener("pointerdown",e=>{e.preventDefault();especial()});
+document.getElementById("btnPulo").addEventListener("pointerdown",e=>{e.preventDefault();pular()});
+document.getElementById("btnRecarga").addEventListener("pointerdown",e=>{e.preventDefault();recarregar()});
+document.getElementById("btnMira").addEventListener("pointerdown",e=>{e.preventDefault();alternarMira()});
+
+document.addEventListener("keydown",e=>{
+ teclas[e.key.toLowerCase()]=true;
+ if(e.key===" "){e.preventDefault();pular()}
+ if(e.key.toLowerCase()==="j")atacar();
+ if(e.key.toLowerCase()==="k")especial();
+ if(e.key.toLowerCase()==="r")recarregar();
+ if(e.key.toLowerCase()==="m")alternarMira();
+});
+document.addEventListener("keyup",e=>teclas[e.key.toLowerCase()]=false);
+
+const joystick=document.getElementById("joystick");
+const pino=document.getElementById("pino");
+
+joystick.addEventListener("pointerdown",e=>{
+ e.preventDefault();
+ joystickAtivo=true;joystickId=e.pointerId;
+ joystick.setPointerCapture(e.pointerId);
+ moverPino(e);
+});
+joystick.addEventListener("pointermove",e=>{
+ if(joystickAtivo&&e.pointerId===joystickId)moverPino(e);
+});
+function soltarJoystick(){
+ joystickAtivo=false;
+ deslocamento.x=0;deslocamento.y=0;
+ pino.style.left="35px";pino.style.top="35px";
+}
+joystick.addEventListener("pointerup",soltarJoystick);
+joystick.addEventListener("pointercancel",soltarJoystick);
+
+function moverPino(e){
+ const r=joystick.getBoundingClientRect();
+ let x=e.clientX-(r.left+r.width/2);
+ let y=e.clientY-(r.top+r.height/2);
+ const limite=35,dist=Math.hypot(x,y);
+ if(dist>limite){x=x/dist*limite;y=y/dist*limite}
+ deslocamento.x=x/limite;
+ deslocamento.y=y/limite;
+ pino.style.left=(35+x)+"px";
+ pino.style.top=(35+y)+"px";
+}
+
+// Câmera: arraste na área livre da tela
+renderer.domElement.addEventListener("pointerdown",e=>{
+ if(e.pointerType==="touch"||e.pointerType==="mouse"){
+  cameraArrastando=true;ultimoX=e.clientX;
+ }
+});
+renderer.domElement.addEventListener("pointermove",e=>{
+ if(cameraArrastando){
+  cameraAngulo-=(e.clientX-ultimoX)*.006;
+  ultimoX=e.clientX;
+ }
+});
+function pararCamera(){cameraArrastando=false}
+renderer.domElement.addEventListener("pointerup",pararCamera);
+renderer.domElement.addEventListener("pointercancel",pararCamera);
+renderer.domElement.addEventListener("contextmenu",e=>e.preventDefault());
+
+function atualizarMinimapa(){
+ const c=document.getElementById("minimapa");
+ const ctx=c.getContext("2d");
+ ctx.clearRect(0,0,100,100);
+ ctx.fillStyle="#285b38";ctx.fillRect(0,0,100,100);
+ ctx.fillStyle="#b6a47c";ctx.fillRect(47,0,6,100);
+ ctx.fillStyle="#54dfff";
+ ctx.beginPath();
+ ctx.arc(50+jogador.position.x*.48,50+jogador.position.z*.48,4,0,Math.PI*2);
+ ctx.fill();
+ ctx.fillStyle="#ff5555";
+ inimigos.forEach(e=>{
+  if(!e.vivo)return;
+  ctx.beginPath();
+  ctx.arc(50+e.obj.position.x*.48,50+e.obj.position.z*.48,2.5,0,Math.PI*2);
+  ctx.fill();
+ });
+}
+
+let tempoAnimacao=0;
+function animar(){
+ requestAnimationFrame(animar);
+ const dt=Math.min(relogio.getDelta(),.04);
+ tempoAnimacao+=dt;
+
+ if(iniciou&&!acabou&&jogador){
+  let x=deslocamento.x+(teclas.d?1:0)-(teclas.a?1:0);
+  let z=deslocamento.y+(teclas.s?1:0)-(teclas.w?1:0);
+  const v=new THREE.Vector3(x,0,z);
+  if(v.length()>1)v.normalize();
+
+  const frente=new THREE.Vector3(Math.sin(cameraAngulo),0,Math.cos(cameraAngulo));
+  const lado=new THREE.Vector3(Math.cos(cameraAngulo),0,-Math.sin(cameraAngulo));
+  const movimento=frente.multiplyScalar(v.y).add(lado.multiplyScalar(v.x));
+
+  if(movimento.length()>.01){
+   jogador.position.addScaledVector(movimento,6.5*dt);
+   jogador.rotation.y=Math.atan2(movimento.x,movimento.z);
+  }
+
+  // Animação dos braços e pernas
+  const andando=movimento.length()>.01;
+  jogador.userData.pernas.forEach((p,i)=>{
+   p.rotation.x=andando?Math.sin(tempoAnimacao*9+i*Math.PI)*.55:0;
+  });
+  jogador.userData.bracos.forEach((b,i)=>{
+   b.rotation.x=andando?Math.sin(tempoAnimacao*9+i*Math.PI)*.35:0;
+  });
+
+  jogador.position.x=THREE.MathUtils.clamp(jogador.position.x,-78,78);
+  jogador.position.z=THREE.MathUtils.clamp(jogador.position.z,-78,78);
+
+  if(pulando){
+   jogador.position.y+=velocidadePulo*dt;
+   velocidadePulo-=18*dt;
+   if(jogador.position.y<=0){
+    jogador.position.y=0;pulando=false;
+   }
+  }
+
+  inimigos.forEach(e=>{
+   if(!e.vivo)return;
+   const dx=jogador.position.x-e.obj.position.x;
+   const dz=jogador.position.z-e.obj.position.z;
+   const dist=Math.hypot(dx,dz);
+
+   if(dist>1.65){
+    e.obj.position.x+=(dx/dist)*e.vel*dt;
+    e.obj.position.z+=(dz/dist)*e.vel*dt;
+    e.obj.rotation.y=Math.atan2(dx,dz);
+    const andando=Math.sin(tempoAnimacao*8+e.anim)*.4;
+    e.obj.userData.pernas.forEach((p,i)=>p.rotation.x=i===0?andando:-andando);
+    e.obj.userData.bracos.forEach((b,i)=>b.rotation.x=i===0?-andando:andando);
+   }else if(performance.now()-e.ataque>1100){
+    e.ataque=performance.now();
+    vida=Math.max(0,vida-7);
+    atualizarHUD();
+    if(vida<=0)mensagemFim(false);
+   }
+  });
+
+  const alvo=new THREE.Vector3(
+   jogador.position.x-Math.sin(cameraAngulo)*(mira?6:8),
+   jogador.position.y+(mira?3.8:5),
+   jogador.position.z-Math.cos(cameraAn  camera.position.lerp(alvo,1-Math.exp(-5*dt));
+  camera.lookAt(
+   jogador.position.x,
+   jogador.position.y+(mira?1.7:1.4),
+   jogador.position.z
+  );
+  atualizarMinimapa();
+ }else if(!jogador){
+  camera.position.set(0,12,18);
+  camera.lookAt(0,0,0);
+ }
+ renderer.render(cena,camera);
+}
+animar();
+
+window.addEventListener("resize",()=>{
+ camera.aspect=innerWidth/innerHeight;
+ camera.updateProjectionMatrix();
+ renderer.setSize(innerWidth,innerHeight);
+});
+</script>
+</body>
+</html>
+
