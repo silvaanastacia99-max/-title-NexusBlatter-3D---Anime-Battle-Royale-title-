@@ -686,19 +686,21 @@ function animar(){
    }
   });
 
-  const alvo=new THREE.Vector3(
+    const alvo=new THREE.Vector3(
    jogador.position.x-Math.sin(cameraAngulo)*(mira?6:8),
    jogador.position.y+(mira?3.8:5),
-   jogador.position.z-Math.cos(cameraAn  camera.position.lerp(alvo,1-Math.exp(-5*dt));
+   jogador.position.z-Math.cos(cameraAngulo)*(mira?6:8)
+  );
+
+  camera.position.lerp(alvo,1-Math.exp(-5*dt));
+
   camera.lookAt(
    jogador.position.x,
    jogador.position.y+(mira?1.7:1.4),
    jogador.position.z
   );
+
   atualizarMinimapa();
- }else if(!jogador){
-  camera.position.set(0,12,18);
-  camera.lookAt(0,0,0);
  }
  renderer.render(cena,camera);
 }
