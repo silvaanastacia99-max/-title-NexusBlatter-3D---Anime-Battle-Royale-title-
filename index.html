@@ -84,9 +84,30 @@ h2{color:#25eaff}
 </style>
 </head>
 <body>
-<!-- TELA INICIAL -->
-<section id="inicio" class="screen active">
- <div class="logo">NEXUSBLATTER 3D</div>
+function jogar(){
+
+ const inicio = document.getElementById("inicio");
+ const selecao = document.getElementById("selecao");
+ const confirmado = document.getElementById("confirmado");
+
+ inicio?.classList.remove("active");
+ selecao?.classList.remove("active");
+ confirmado?.classList.remove("active");
+
+ const game = document.getElementById("game");
+
+ if(game){
+   game.style.display = "block";
+
+   if(typeof iniciarJogo === "function"){
+     iniciarJogo();
+   }else if(typeof reiniciar === "function"){
+     reiniciar();
+   }
+ }else{
+   alert("A tela da batalha 3D não foi encontrada!");
+ }
+}
  <div class="subtitle">ANIME BATTLE ROYALE</div>
  <p>Prepare-se para entrar no universo dos animes!</p>
  <button onclick="abrirSelecao()">ENTRAR NO JOGO</button>
