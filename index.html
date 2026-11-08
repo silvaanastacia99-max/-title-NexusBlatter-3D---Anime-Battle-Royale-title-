@@ -84,30 +84,10 @@ h2{color:#25eaff}
 </style> </style>
 </head>
 <body>
- function jogar(){
-
+ function jogar
  const inicio = document.getElementById("inicio");
  const selecao = document.getElementById("selecao");
  const confirmado = document.getElementById("confirmado");
-
- inicio?.classList.remove("active");
- selecao?.classList.remove("active");
- confirmado?.classList.remove("active");
-
- const game = document.getElementById("game");
-
- if(game){
-   game.style.display = "block";
-
-   if(typeof iniciarJogo === "function"){
-     iniciarJogo();
-   }else if(typeof reiniciar === "function"){
-     reiniciar();
-   }
- }else{
-   alert("A tela da batalha 3D não foi encontrada!");
- }
-}
  <div class="subtitle">ANIME BATTLE ROYALE</div>
  <p>Prepare-se para entrar no universo dos animes!</p>
  <button onclick="abrirSelecao()">ENTRAR NO JOGO</button>
@@ -135,7 +115,6 @@ h2{color:#25eaff}
    <strong>NAMI</strong>
    <small>Navegadora</small>
   </div>
-
   <div class="character" onclick="selecionar(this,'Sasuke')">
    <div class="portrait">⚡</div>
    <strong>SASUKE</strong>
@@ -155,7 +134,6 @@ h2{color:#25eaff}
  <button onclick="confirmar()">CONFIRMAR PERSONAGEM</button>
  <button onclick="voltar()">VOLTAR</button>
 </section>
-
 <!-- PERSONAGEM CONFIRMADO -->
 <section id="confirmado" class="screen">
  <h1>PERSONAGEM CONFIRMADO!</h1>
@@ -164,10 +142,8 @@ h2{color:#25eaff}
  <button onclick="jogar()">JOGAR</button>
  <button onclick="abrirSelecao()">TROCAR PERSONAGEM</button>
 </section>
-
 <script>
 let personagem="Naruto";
-
 function mostrar(id){
  document.querySelectorAll(".screen").forEach(t=>{
   t.classList.remove("active");
