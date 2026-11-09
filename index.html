@@ -143,6 +143,37 @@ function jogar(){
  <div id="caixa">
   <h1>NEXUSBLATTER 3D</h1>
   <p>ANIME BATTLE ROYALE — V2.0</p>
+   <p>Personagem escolhido: <span id="chosen">Naruto</span></p>
+ <button onclick="confirmar()">CONFIRMAR PERSONAGEM</button>
+ <button onclick="voltar()">VOLTAR</button>
+</section>
+<!-- PERSONAGEM CONFIRMADO -->
+<section id="confirmado" class="screen">
+ <h1>PERSONAGEM CONFIRMADO!</h1>
+ <div class="logo" style="font-size:35px" id="nomeFinal">NARUTO</div>
+ <p>Seu guerreiro está preparado!</p>
+ <button onclick="jogar()">JOGAR</button>
+ <button onclick="abrirSelecao()">TROCAR PERSONAGEM</
+<canvas id="minimapa" width="100" height="100"></canvas>
+<div id="miraVisual"><div id="miralinha1"></div><div id="miralinha2"></div></div>
+<div id="controles">
+ <div id="joystick"><div id="pino"></div></div>
+ <div class="botoes">
+  <button class="btn" id="btnPulo">PULAR</button>
+  <div class="linha">
+   <button class="btn" id="btnMira">MIRA</button>
+   <button class="btn" id="btnEspecial">PODER</button>
+  </div>
+  <div class="linha">
+   <button class="btn" id="btnRecarga">RECARREGAR</button>
+   <button class="btn" id="btnAtaque">ATIRAR</button>
+  </div>
+ </div>
+</div>
+<div id="mensagem">
+ <div id="caixa">
+  <h1>NEXUSBLATTER 3D</h1>
+  <p>ANIME BATTLE ROYALE — V2.0</p>
   <p>Escolha seu personagem:</p>
   <div class="herois">
    <button class="heroi selecionado" data-heroi="Nexus">⚡ NEXUS</button>
@@ -150,6 +181,11 @@ function jogar(){
    <button class="heroi" data-heroi="Kai">❄️ KAI</button>
    <button class="heroi" data-heroi="Ren">🌟 REN</button>
   </div>
+  <p>Explore o mapa, use sua arma e vença a batalha!</p>
+  <button id="jogar">ENTRAR NO JOGO</button>
+ </div>
+</div>
+<script type="module">
   <p>Explore o mapa, use sua arma e vença a batalha!</p>
   <button id="jogar">ENTRAR NO JOGO</button>
  </div>
