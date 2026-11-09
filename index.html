@@ -7,122 +7,6 @@
 <style>  
 *{box-sizing:border-box}  
 body{  
- margin:0;  
- font-family:Arial,sans-serif;  
- background:radial-gradient(circle at top,#164d75,#06101e 65%);  
- color:white;  
- min-height:100vh;  
- text-align:center;  
-}  
-.screen{  
- display:none;  
- min-height:100vh;  
- padding:25px 15px;  
- align-items:center;  
- justify-content:center;  
- flex-direction:column;  
-}  
-.screen.active{display:flex}  
-.logo{  
- font-size:clamp(35px,9vw,65px);  
- font-weight:1000;  
- color:#21e7ff;  
- text-shadow:0 0 18px #00bfff;  
-}  
-.subtitle{  
- color:#ffd83d;  
- font-weight:bold;  
- letter-spacing:4px;  
- margin:15px 0 35px;  
-}  
-button{  
- border:0;  
- border-radius:12px;  
- padding:16px 25px;  
- font-size:17px;  
- font-weight:bold;  
- cursor:pointer;  
- color:#061426;  
- background:linear-gradient(90deg,#19e5ff,#ffd52d);  
- box-shadow:0 0 15px #00cfff66;  
- margin:10px;  
-}  
-.character{  
- background:#102941;  
- border:2px solid #286080;  
- border-radius:15px;  
- padding:12px;  
- cursor:pointer;  
-}  
-.character.selected{  
- border:3px solid #ffe12e;  
- background:#164b63;  
- box-shadow:0 0 18px #00dfff;  
-}  
-.character .portrait{  
- height:115px;  
- display:flex;  
- align-items:center;  
- justify-content:center;  
- font-size:75px;  
-}  
-.character strong{display:block;margin:8px}  
-.character small{color:#a9d9ee}  
-#chosen{color:#ffe12e;font-size:19px}  
-.note{color:#a9c9dd;font-size:13px}  
-</style>  
-</head>  
-<body>
-  </div>
- <p>Personagem escolhido: <span id="chosen">Naruto</span></p>
- <button onclick="confirmar()">CONFIRMAR PERSONAGEM</button>
- <button onclick="voltar()">VOLTAR</button>
-</section>
-<!-- PERSONAGEM CONFIRMADO -->
-<section id="confirmado" class="screen">
- <h1>PERSONAGEM CONFIRMADO!</h1>
- <div class="logo" style="font-size:35px" id="nomeFinal">NARUTO</div>
- <p>Seu guerreiro está preparado!</p>
- <button onclick="jogar()">JOGAR</button>
- <button onclick="abrirSelecao()">TROCAR PERSONAGEM</button>
-</section>
-<script>
-let personagem="Naruto";
-function mostrar(id){
- document.querySelectorAll(".screen").forEach(t=>{
-  t.classList.remove("active");
- });
- document.getElementById(id).classList.add("active");
-}
-
-function abrirSelecao(){
- mostrar("selecao");
-}
-
-function selecionar(elemento,nome){
- personagem=nome;
- document.querySelectorAll(".character").forEach(c=>{
-  c.classList.remove("selected");
- });
- elemento.classList.add("selected");
- document.getElementById("chosen").textContent=nome;
-}
-
-function voltar(){
- mostrar("inicio");
-}
-
-function confirmar(){
- document.getElementById("nomeFinal").textContent=personagem;
- mostrar("confirmado");
-}
-
-function jogar(){
- alert("Personagem "+personagem+" selecionado! A próxima etapa será conectar esta tela à batalha 3D.");
-}
-</script>
-</body>
-</html>
 <canvas id="minimapa" width="100" height="100"></canvas>
 <div id="miraVisual"><div id="miralinha1"></div><div id="miralinha2"></div></div>
 <div id="controles">
@@ -132,15 +16,6 @@ function jogar(){
   <div class="linha">
    <button class="btn" id="btnMira">MIRA</button>
    <button class="btn" id="btnEspecial">PODER</button>
-  </div>
-  <div class="linha">
-   <button class="btn" id="btnRecarga">RECARREGAR</button>
-   <button class="btn" id="btnAtaque">ATIRAR</button>
-  </div>
- </div>
-</div>
-<div id="mensagem">
- <div id="caixa">
   <h1>NEXUSBLATTER 3D</h1>
   <p>ANIME BATTLE ROYALE — V2.0</p>
    <p>Personagem escolhido: <span id="chosen">Naruto</span></p>
