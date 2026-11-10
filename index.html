@@ -7,42 +7,63 @@
 <meta name="theme-color" content="#101c25">
 <title>NexusBlatter 3D - Anime Battle Royale</title>
 <style>
-*{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#101c25;color:white;font-family:Arial;touch-action:none}
-canvas{display:block}
-#hud{position:fixed;top:10px;left:10px;right:10px;z-index:5;display:none;pointer-events:none}
-#topo{display:flex;justify-content:space-between;gap:7px}
-.painel{background:#07131ddd;border:1px solid #5ce5ff77;border-radius:10px;padding:8px;font-size:12px}
-#barraFundo{width:115px;height:11px;background:#482b32;border-radius:15px;margin-top:5px;overflow:hidden}
-#barraVida{height:100%;width:100%;background:#35e46a}
-#controles{position:fixed;inset:0;z-index:6;display:none;pointer-events:none}
-#joystick{position:absolute;left:20px;bottom:25px;width:120px;height:120px;border-radius:50%;background:#ffffff22;border:2px solid #ffffff77;pointer-events:auto}
-#pino{position:absolute;width:45px;height:45px;border-radius:50%;background:#65dfffcc;border:2px solid white;left:35px;top:35px}
-.botoes{position:absolute;right:13px;bottom:20px;display:flex;flex-direction:column;gap:8px;pointer-events:auto}
-.linha{display:flex;gap:8px}
-.btn{width:64px;height:64px;border-radius:50%;border:2px solid white;background:#153c57ee;color:white;font-weight:bold;font-size:11px}
-#btnAtaque{background:#a52c45;width:73px;height:73px}
-#btnEspecial{background:#6635a8}
-#btnPulo{background:#237b9c}
-#mensagem{position:fixed;inset:0;z-index:10;background:#06101bea;display:flex;align-items:center;justify-content:center;padding:12px}
-#caixa{width:min(480px,100%);max-height:94vh;overflow:auto;text-align:center;background:linear-gradient(145deg,#18374b,#101725);border:2px solid #48dfff;border-radius:18px;padding:18px}
-h1{color:#65eaff;font-size:27px;margin:5px}
-#caixa p{font-size:13px;color:#dceaf2}
-#listaHerois{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:15px 0}
-.heroi{padding:12px 4px;border:2px solid #456477;border-radius:10px;background:#0c1e2c;color:white;font-weight:bold}
-.heroi.selecionado{border-color:#65eaff;background:#14506a}
-.heroi small{display:block;color:#b9d9e8;margin-top:5px;font-weight:normal}
-#jogar{width:100%;padding:15px;border:0;border-radius:12px;background:linear-gradient(90deg,#00bde8,#236be8);color:white;font-size:17px;font-weight:bold}
-#minimapa{position:fixed;right:10px;top:105px;width:100px;height:100px;border:2px solid #7deaff;border-radius:9px;background:#173b2cdd;z-index:5;display:none}
-#mira{position:fixed;left:50%;top:50%;width:22px;height:22px;transform:translate(-50%,-50%);z-index:4;display:none;pointer-events:none}
-#aviso{position:fixed;top:55px;left:50%;transform:translateX(-50%);background:#07131ddd;padding:8px 14px;border-radius:10px;z-index:5;display:none;font-size:13px}
-@media(max-height:500px){
-#joystick{width:90px;height:90px;bottom:10px}
-#pino{width:37px;height:37px;left:25px;top:25px}
-.btn{width:52px;height:52px}
-#btnAtaque{width:60px;height:60px}
+
+<script>
+let personagemEscolhido = "Naruto";
+
+function selecionar(elemento, nome) {
+  personagemEscolhido = nome;
+
+  document.querySelectorAll(".character").forEach(card => {
+    card.classList.remove("selecionado");
+  });
+
+  elemento.classList.add("selecionado");
 }
-</style>
+
+function entrarNoJogo() {
+  if (!personagemEscolhido) {
+    alert("Escolha um personagem!");
+    return;
+  }
+
+  const selecao = document.getElementById("selecao");
+  const jogo = document.getElementById("game");
+
+  if (!jogo) {
+    alert("Não encontrei a tela do jogo. Verifique o código do jogo 3D.");
+    return;
+  }
+
+  if (selecao) selecao.style.display = "none";
+
+  jogo.style.display = "block";
+
+  window.dispatchEvent(new CustomEvent(
+    "nexus:iniciar",
+    { detail: { personagem: personagemEscolhido } }
+  ));
+}
+
+// Ativa os botões de personagens
+document.querySelectorAll(".character").forEach(card => {
+  card.addEventListener("click", () => {
+    selecionar(card, card.dataset.nome ||
+      card.querySelector("strong")?.textContent.trim());
+  });
+});
+
+// Ativa o botão ENTRAR NO JOGO
+document.addEventListener("DOMContentLoaded", () => {
+  const botao = [...document.querySelectorAll("button")]
+    .find(b => b.textContent.trim().includes("ENTRAR NO JOGO"));
+
+  if (botao) {
+    botao.onclick = entrarNoJogo;
+  }
+});
+</script>
+ 
 </head>
 <body>
 
