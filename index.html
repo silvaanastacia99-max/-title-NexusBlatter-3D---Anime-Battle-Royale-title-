@@ -451,61 +451,6 @@ function animar(){
 
   jogador.position.x=THREE.MathUtils.clamp(jogador.position.x,-78,78);
   jogador.position.z=THREE.MathUtils.clamp(jogador.position.z,-78,78);
-
-  if(pulando){
-   jogador.position.y+=velocidadePulo*dt;
-   velocidadePulo-=18*dt;
-   if(jogador.position.y<=0){
-    jogador.position.y=0;pulando=false;
-   }
-  }
-
-  inimigos.forEach(e=>{
-   if(!e.vivo)return;
-   const dx=jogador.position.x-e.obj.position.x;
-   const dz=jogador.position.z-e.obj.position.z;
-   const dist=Math.hypot(dx,dz);
-
-   if(dist>1.65){
-    e.obj.position.x+=(dx/dist)*e.vel*dt;
-    e.obj.position.z+=(dz/dist)*e.vel*dt;
-    e.obj.rotation.y=Math.atan2(dx,dz);
-    const andando=Math.sin(tempoAnimacao*8+e.anim)*.4;
-    e.obj.userData.pernas.forEach((p,i)=>p.rotation.x=i===0?andando:-andando);
-    e.obj.userData.bracos.forEach((b,i)=>b.rotation.x=i===0?-andando:andando);
-   }else if(performance.now()-e.ataque>1100){
-    e.ataque=performance.now();
-    vida=Math.max(0,vida-7);
-    atualizarHUD();
-    if(vida<=0)mensagemFim(false);
-   }
-  });
-
-    const alvo=new THREE.Vector3(
-   jogador.position.x-Math.sin(cameraAngulo)*(mira?6:8),
-   jogador.position.y+(mira?3.8:5),
-   jogador.position.z-Math.cos(cameraAngulo)*(mira?6:8)
-  );
-
-  camera.position.lerp(alvo,1-Math.exp(-5*dt));
-
-  camera.lookAt(
-   jogador.position.x,
-   jogador.position.y+(mira?1.7:1.4),
-   jogador.position.z
-  );
-
-  atualizarMinimapa();
- }
- renderer.render(cena,camera);
-}
-animar();
-
-window.addEventListener("resize",()=>{
- camera.aspect=innerWidth/innerHeight;
- camera.updateProjectionMatrix();
- renderer.setSize(innerWidth,innerHeight);
-});
 </script>
 </body>
 </html>
