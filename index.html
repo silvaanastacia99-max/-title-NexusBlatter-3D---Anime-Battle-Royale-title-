@@ -164,3 +164,126 @@ document.querySelector('#jump').onpointerdown=e=>{e.preventDefault();if(game&&!j
 const stick=document.querySelector('#stick'),knob=document.querySelector('#knob');let stickId=null;
 function moveStick(e){const r=stick.getBoundingClientRect(),dx=e.clientX-r.left-r.width/2,dy=e.clientY-r.top-r.height/2,m=Math.hypot(dx,dy),lim=35,x=m>lim?dx/m*lim:dx,y=m>lim?dy/m*lim:dy;sx=x/lim;sy=y/lim;knob.style.transform=`translate(${x}px,${y}px)`}
 stick.onpointerdown=e=>{stickId=e.pointerId;stick.setPointerCapture(stickId);moveStick(e)};stick.onpointermove=e=>{if(e.pointerId===stickId)mo
+$("jogar").onclick=reiniciar;
+
+const joystick=$("joystick");
+const bola=$("bola");
+let toqueJoystick=null;
+
+function moverJoystick(e){
+const r=joystick.getBoundingClientRect();
+
+let dx=e.clientX-(r.left+r.width/2);
+let dy=e.clientY-(r.top+r.height/2);
+
+const max=35;
+const d=Math.hypot(dx,dy);
+
+if(d>max){
+dx=dx/d*max;
+dy=dy/d*max;
+}
+
+joystickX=dx/max;
+joystickY=dy/max;
+
+bola.style.transform=`translate(${dx}px,${dy}px)`;
+}
+
+joystick.addEventListener("pointerdown",e=>{
+e.preventDefault();
+toqueJoystick=e.pointerId;
+joystick.setPointerCapture(e.pointerId);
+moverJoystick(e);
+});
+
+joystick.addEventListener("pointermove",e=>{
+if(e.pointerId===toqueJoystick)moverJoystick(e);
+});
+
+function soltarJoystick(){
+toqueJoystick=null;
+joystickX=0;
+joystickY=0;
+bola.style.transform="translate(0,0)";
+}
+
+joystick.addEventListener("pointerup",soltarJoystick);
+joystick.addEventListener("pointercancel",soltarJoystick);
+
+let toqueCamera=null;
+let ultimaX=0;
+
+renderer.domElement.addEventListener("pointerup",()=>{
+ toqueCamera=null;
+});
+
+renderer.domElement.addEventListener("pointercancel",()=>{
+ toqueCamera=null;
+});
+
+$("atacar").addEventListener("pointerdown",e=>{
+ e.preventDefault();
+ disparar();
+});
+
+$("especial").addEventListener("pointerdown",e=>{
+ e.preventDefault();
+ poderEspecial();
+});
+
+$("pular").addEventListener("pointerdown",e=>{
+ e.preventDefault();
+ if(jogando&&!pulando){
+  pulando=true;
+  velocidadeVertical=8;
+ }
+});
+window.addEventListener("keydown",e=>{
+ teclas[e.key.toLowerCase()]=true;
+ if(e.key===" "){
+  if(jogando&&!pulando){
+   pulando=true;
+   velocidadeVertical=8;
+  }
+ }
+ if(e.key.toLowerCase()==="f")disparar();
+});
+
+window.addEventListener("keyup",e=>{
+ teclas[e.key.toLowerCase()]=false;
+});
+
+window.addEventListener("resize",()=>{
+ camera.aspect=innerWidth/innerHeight;
+ camera.updateProjectionMatrix();
+ renderer.setSize(innerWidth,innerHeight);
+});
+
+let anterior=performance.now();
+
+function animar(agora){
+ requestAnimationFrame(animar);
+
+ const dt=Math.min((agora-anterior)/1000,.05);
+ anterior=agora;
+
+ if(jogando&&!acabou){
+  tempoJogo+=dt;
+  atualizarJogador(dt);
+  atualizarInimigos(dt);
+  atualizarProjeteis(dt);
+  atualizarCamera(dt);
+  desenharMinimapa();
+ }
+
+ renderer.render(cena,camera);
+}
+
+atualizarHUD();
+atualizarCamera(0);
+requestAnimationFrame(animar);
+
+</script>
+</body>
+</html>
