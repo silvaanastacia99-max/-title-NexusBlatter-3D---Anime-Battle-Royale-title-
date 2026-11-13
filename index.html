@@ -1,4 +1,169 @@
-
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#08152b">
+<title>NexusBlatter 3D - Anime Battle Royale</title>
+<style>
+:root{--gold:#ffd52e;--cyan:#27e8ff;--panel:#071426ed}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#08152b;color:#fff;font-family:Arial,sans-serif;touch-action:none}
+#world{position:fixed;inset:0;width:100%;height:100%;display:block}
+#shade{position:fixed;inset:0;pointer-events:none;background:linear-gradient(90deg,#03101d99,transparent 35%,transparent 72%,#03101d66),linear-gradient(0deg,#03101d88,transparent 35%)}
+#topbar{position:fixed;top:8px;left:10px;right:10px;display:flex;align-items:center;justify-content:space-between;gap:7px;z-index:5}
+.profile,.currency,.topicons{background:#061326e8;border:1px solid #ffffff35;border-radius:14px;padding:7px 10px;box-shadow:0 5px 18px #0005}
+.profile{display:flex;align-items:center;gap:8px}.avatar{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#7146ce,#20cfff);display:grid;place-items:center;font-size:24px;border:2px solid #ffe36a}
+.small{font-size:11px;color:#b9d5e7}.name{font-weight:900;font-size:14px}.currency{display:flex;gap:12px;font-weight:bold;font-size:14px}.topicons{display:flex;gap:12px;font-size:19px}
+#brand{position:fixed;top:82px;left:18px;z-index:4;text-shadow:0 4px 5px #000}
+#brand h1{margin:0;font-size:clamp(27px,5vw,52px);font-weight:1000;letter-spacing:-2px;font-style:italic;transform:skew(-7deg)}#brand h1 span{color:var(--cyan)}
+#brand p{margin:0 0 0 14px;font-size:12px;letter-spacing:4px;font-weight:bold}
+#leftmenu{position:fixed;left:10px;top:36%;z-index:6;display:flex;flex-direction:column;gap:6px;width:158px}
+.menuBtn{border:1px solid #ffffff35;background:#071629e8;color:#fff;border-radius:9px;padding:11px 9px;text-align:left;font-size:14px;font-weight:900;box-shadow:0 4px 12px #0005}
+.menuBtn.active,.menuBtn:active{background:linear-gradient(90deg,#ffcb20,#e78d00);color:#17202a;border-color:#fff2a4}
+#rightpanel{position:fixed;right:10px;bottom:82px;width:min(285px,43vw);z-index:6;background:#061326eF;border:1px solid #ffffff55;border-radius:14px;padding:10px;box-shadow:0 8px 25px #0007}
+#rightpanel h3{margin:0 0 8px;font-size:13px;color:var(--gold);text-transform:uppercase}
+#cards{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.charCard{min-width:0;border:2px solid #71859a;background:#14263c;border-radius:9px;padding:4px;color:white;font-size:11px;font-weight:bold;text-align:center}
+.charCard.selected{border:3px solid var(--gold);box-shadow:0 0 12px #ffdc39}
+.portrait{height:60px;border-radius:6px;display:grid;place-items:center;font-size:32px;background:linear-gradient(145deg,#4566a8,#111c35)}
+.charCard span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px}
+#bottomnav{position:fixed;bottom:9px;left:10px;right:10px;z-index:7;display:flex;align-items:center;gap:5px}
+.navBtn{flex:1;background:#071426ed;border:1px solid #ffffff38;border-radius:9px;color:white;padding:12px 3px;font-weight:bold;font-size:clamp(9px,1.5vw,13px)}
+.navBtn.active{color:var(--gold);border-bottom:4px solid var(--gold)}
+#start{background:linear-gradient(110deg,#ffe84b,#ff9f00);color:#191300;font-size:clamp(15px,2.3vw,22px);font-weight:1000;border:0;border-radius:11px;padding:13px 18px;box-shadow:0 0 20px #ffb00088;min-width:130px}
+#modal{position:fixed;inset:0;z-index:20;display:none;align-items:center;justify-content:center;padding:16px;background:#020914bd}
+#dialog{width:min(440px,95vw);max-height:82vh;overflow:auto;background:linear-gradient(145deg,#123653,#081321);border:2px solid #38dfff;border-radius:18px;padding:22px;text-align:center;box-shadow:0 0 35px #00bfff55}
+#dialog h2{margin:0 0 10px;color:var(--cyan);font-size:26px}#dialog p{line-height:1.45;color:#e2edf6}
+.action{border:0;border-radius:10px;padding:13px 20px;background:linear-gradient(90deg,#25dfff,#32ffad);font-weight:900;color:#071625;font-size:16px;margin:5px}
+#gamehud{display:none;position:fixed;top:10px;left:10px;right:10px;z-index:8;justify-content:space-between;pointer-events:none}
+.hudbox{background:#071426e8;padding:9px 12px;border:1px solid #ffffff55;border-radius:10px;font-weight:bold}
+#healthbar{width:130px;height:10px;background:#555;border-radius:10px;overflow:hidden;margin-top:5px}#healthfill{height:100%;width:100%;background:#2cff72}
+#gamecontrols{display:none;position:fixed;bottom:18px;left:14px;right:14px;z-index:9;justify-content:space-between;align-items:end;pointer-events:none}
+#stick{width:116px;height:116px;border-radius:50%;background:#ffffff24;border:2px solid #ffffff80;position:relative;pointer-events:auto}
+#knob{position:absolute;width:46px;height:46px;left:33px;top:33px;border-radius:50%;background:#ffffffb8;border:2px solid white}
+#fightbuttons{display:flex;gap:8px;align-items:end;pointer-events:auto}
+.fight{width:64px;height:64px;border-radius:50%;border:2px solid #ffffffaa;background:#173451ef;color:white;font-weight:bold;font-size:12px}
+#attack{width:76px;height:76px;background:#d84938}
+#cameraHint{position:fixed;right:12px;bottom:108px;z-index:8;font-size:10px;color:white;display:none;text-shadow:0 1px 3px #000}
+#toast{position:fixed;top:45%;left:50%;transform:translate(-50%,-50%);z-index:30;background:#061426ed;border:1px solid var(--cyan);border-radius:10px;padding:12px 18px;display:none;text-align:center}
+@media(max-width:650px){
+ #topbar{top:5px;left:5px;right:5px}.profile{padding:5px;gap:5px}.avatar{width:33px;height:33px}.name{font-size:12px}.small{font-size:9px}.currency{gap:6px;padding:6px;font-size:11px}.topicons{gap:7px;padding:7px;font-size:15px}
+ #brand{top:65px;left:10px}#brand h1{font-size:27px}#brand p{font-size:8px;letter-spacing:3px}
+ #leftmenu{top:auto;bottom:84px;left:6px;width:112px;gap:4px}.menuBtn{padding:8px 5px;font-size:10px}
+ #rightpanel{right:6px;bottom:84px;width:calc(100% - 126px);max-width:245px;padding:7px}
+ #rightpanel h3{font-size:10px}.portrait{height:45px;font-size:24px}.charCard{font-size:9px;padding:3px}
+ #bottomnav{left:4px;right:4px;bottom:4px;gap:3px}.navBtn{padding:10px 1px;font-size:8px}#start{min-width:82px;padding:11px 6px;font-size:13px}
+}
+</style>
+</head>
+<body>
+<canvas id="world"></canvas><div id="shade"></div>
+<div id="topbar">
+ <div class="profile"><div class="avatar" id="profileFace">⚡</div><div><div class="name">NexusBlatter</div><div class="small">Nv. 01 · Explorador</div></div></div>
+ <div class="currency"><span>🪙 <b>0</b></span><span>💎 <b>0</b></span><span>➕</span></div>
+ <div class="topicons"><span>♟</span><span>✉</span><span>⚙</span><span>📶</span></div>
+</div>
+<div id="brand"><h1>NEXUS<span>BLATTER</span></h1><p>ANIME BATTLE ROYALE · 3D</p></div>
+<div id="leftmenu">
+ <button class="menuBtn active" data-panel="LOJA">🛒 LOJA</button>
+ <button class="menuBtn" data-panel="PERSONAGENS">👕 PERSONAGENS</button>
+ <button class="menuBtn" data-panel="ARMAS">⚔ ARMAS</button>
+ <button class="menuBtn" data-panel="MOCHILA">🎒 MOCHILA</button>
+ <button class="menuBtn" data-panel="MISSÕES">☑ MISSÕES</button>
+ <button class="menuBtn" data-panel="EVENTOS">🏆 EVENTOS</button>
+</div>
+<div id="rightpanel"><h3>✦ ESCOLHA SEU PERSONAGEM</h3><div id="cards"></div></div>
+<div id="bottomnav">
+ <button class="navBtn" data-panel="COFRE">▣ COFRE</button><button class="navBtn" data-panel="ARMAS">⚔ ARMAS</button>
+ <button class="navBtn active" data-panel="PERSONAGENS">♟ PERSONAGEM</button><button class="navBtn" data-panel="PET">🐾 PET</button>
+ <button class="navBtn" data-panel="COLEÇÃO">▧ COLEÇÃO</button><button id="start">COMEÇAR ▶</button>
+</div>
+<div id="gamehud"><div class="hudbox">NEXUSBLATTER<br><span id="score">Pontos: 0</span><br><span id="enemyCount">Adversários: 8</span></div><div class="hudbox">VIDA<div id="healthbar"><div id="healthfill"></div></div><span id="healthtext">100 / 100</span></div></div>
+<div id="gamecontrols"><div id="stick"><div id="knob"></div></div><div id="fightbuttons"><button class="fight" id="jump">PULAR</button><button class="fight" id="energy">PODER</button><button class="fight" id="attack">✦<br>ATIRAR</button></div></div>
+<div id="cameraHint">Arraste o lado direito para girar a câmera</div>
+<div id="modal"><div id="dialog"><h2 id="modalTitle">NEXUSBLATTER</h2><div id="modalBody"></div><button class="action" id="modalClose">VOLTAR</button></div></div><div id="toast"></div>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+const canvas=document.querySelector('#world'),scene=new THREE.Scene();
+scene.background=new THREE.Color(0x83c8f0);scene.fog=new THREE.Fog(0x83c8f0,105,260);
+const camera=new THREE.PerspectiveCamera(60,innerWidth/innerHeight,.1,450);
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;
+scene.add(new THREE.HemisphereLight(0xe4f4ff,0x52633b,1.65));
+const sun=new THREE.DirectionalLight(0xffedcf,2.0);sun.position.set(-40,75,30);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);scene.add(sun);
+const material=(color,roughness=.78,extra={})=>new THREE.MeshStandardMaterial({color,roughness,...extra});
+const grass=material(0x438d3c),path=material(0x777b7a),bark=material(0x62402d),leaf=material(0x24713b),roofMat=material(0x874a36);
+function addMesh(geo,mat,x,y,z,parent=scene){const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m}
+const ground=addMesh(new THREE.PlaneGeometry(260,260),grass,0,0,0);ground.rotation.x=-Math.PI/2;
+function road(x,z,w,d){const m=addMesh(new THREE.PlaneGeometry(w,d),path,x,.035,z);m.rotation.x=-Math.PI/2}
+road(0,0,260,10);road(0,0,10,260);
+const lineMat=material(0xd9d2a6);for(let i=-120;i<125;i+=12){addMesh(new THREE.BoxGeometry(5,.025,.12),lineMat,i,.07,0);addMesh(new THREE.BoxGeometry(.12,.025,5),lineMat,0,.07,i)}
+function house(x,z,color,scale=1){
+ const g=new THREE.Group();scene.add(g);g.position.set(x,0,z);g.scale.setScalar(scale);
+ addMesh(new THREE.BoxGeometry(9,5.2,8),material(color),0,2.6,0,g);
+ addMesh(new THREE.ConeGeometry(7,3.2,4),roofMat,0,6.65,0,g).rotation.y=Math.PI/4;
+ addMesh(new THREE.BoxGeometry(1.45,2.7,.18),material(0x493024),0,1.35,4.08,g);
+ for(const xw of [-2.7,2.7]){addMesh(new THREE.BoxGeometry(1.5,1.35,.16),material(0x284f70,.3,{metalness:.2}),xw,3.4,4.08,g);addMesh(new THREE.BoxGeometry(1.7,.12,.2),material(0xe2d1a5),xw,4.13,4.08,g)}
+}
+[[-28,-28,0xd5b783,1.1],[29,-32,0xd6a1a1,1.15],[-42,30,0xd9dfd9,1],[42,33,0xd5ad79,1.1],[8,52,0xa9bfd0,.9],[-58,-5,0xd8c58f,.95],[62,-48,0xd0a16e,1.1]].forEach(v=>house(...v));
+function tree(x,z,s=1){const g=new THREE.Group();scene.add(g);g.position.set(x,0,z);g.scale.setScalar(s);addMesh(new THREE.CylinderGeometry(.28,.48,3.5,9),bark,0,1.75,0,g);addMesh(new THREE.SphereGeometry(2.25,14,12),leaf,0,4.1,0,g);addMesh(new THREE.SphereGeometry(1.55,12,10),material(0x318344),1.1,4.55,.15,g)}
+for(let i=0;i<95;i++){let x=(Math.random()-.5)*240,z=(Math.random()-.5)*240;if(Math.abs(x)<14||Math.abs(z)<14)continue;tree(x,z,.7+Math.random()*.65)}
+// Montanhas decorativas no horizonte
+for(let i=0;i<18;i++){const a=i/18*Math.PI*2,r=118;const m=addMesh(new THREE.ConeGeometry(12+Math.random()*9,25+Math.random()*20,5),material(i%2?0x667d83:0x7c8b91),Math.sin(a)*r,12,Math.cos(a)*r);m.rotation.z=(Math.random()-.5)*.18}
+const roster=[
+ {name:'Naruto',hair:0xf1b52d,cloth:0xe47720,accent:0x202a3d,face:'🍥',power:'Energia do redemoinho'},
+ {name:'Nami',hair:0xe87924,cloth:0x258b9b,accent:0x18374b,face:'🌩️',power:'Tempestade elétrica'},
+ {name:'Zoro',hair:0x69a34c,cloth:0x28523c,accent:0x172c26,face:'⚔️',power:'Corte de energia'},
+ {name:'Astra',hair:0x18264c,cloth:0x285fd2,accent:0x101c34,face:'⚡',power:'Pulso elétrico'},
+ {name:'Kaori',hair:0x9a284d,cloth:0xb83f75,accent:0x44243e,face:'🌸',power:'Escudo floral'},
+ {name:'Ren',hair:0x171717,cloth:0x303b52,accent:0x101522,face:'🔥',power:'Chama azul'}
+];
+let selected=0;
+function fighter(data){
+ const g=new THREE.Group(),skin=material(0xe9b895),hair=material(data.hair),shirt=material(data.cloth),pants=material(data.accent),boot=material(0x202532),white=material(0xf4e9dc),eye=material(0x202b3d);
+ // tronco e cintura anatômicos, sem cubos
+ const torso=addMesh(new THREE.CapsuleGeometry(.43,.68,6,12),shirt,0,1.48,0,g);torso.scale.set(1.05,1,.72);
+ addMesh(new THREE.SphereGeometry(.31,16,14),skin,0,2.43,0,g);
+ // cabelo em mechas arredondadas e pontas
+ addMesh(new THREE.SphereGeometry(.36,16,12),hair,0,2.68,.015,g);
+ for(let k=0;k<7;k++){const a=k/7*Math.PI*2;const spike=addMesh(new THREE.ConeGeometry(.13,.42,7),hair,Math.cos(a)*.23,2.89,Math.sin(a)*.22,g);spike.rotation.z=-Math.cos(a)*.55;spike.rotation.x=Math.sin(a)*.45}
+ // franja, olhos e faixa
+ addMesh(new THREE.SphereGeometry(.055,10,8),eye,-.13,2.47,-.29,g);addMesh(new THREE.SphereGeometry(.055,10,8),eye,.13,2.47,-.29,g);
+ addMesh(new THREE.BoxGeometry(.48,.09,.07),material(0xb6c6d4,.4,{metalness:.35}),0,2.61,-.31,g);
+ // braços e mãos com articulações
+ for(const side of [-1,1]){
+  const arm=addMesh(new THREE.CapsuleGeometry(.14,.48,5,9),shirt,side*.52,1.54,0,g);arm.rotation.z=side*-.16;
+  addMesh(new THREE.SphereGeometry(.145,12,10),skin,side*.57,1.18,-.015,g);
+  const leg=addMesh(new THREE.CapsuleGeometry(.17,.48,5,9),pants,side*.2,.55,0,g);leg.rotation.z=side*.035;
+  addMesh(new THREE.CapsuleGeometry(.17,.2,4,8),boot,side*.2,.16,-.045,g);
+ }
+ // gola, cinto e detalhes de roupa
+ addMesh(new THREE.TorusGeometry(.28,.055,8,18),material(0xd8dce5),0,1.94,0,g).rotation.x=Math.PI/2;
+ addMesh(new THREE.TorusGeometry(.34,.045,8,24),material(0x242b36),0,.98,0,g).rotation.x=Math.PI/2;
+ g.traverse(o=>{if(o.isMesh)o.castShadow=true});return g;
+}
+const player=fighter(roster[0]);scene.add(player);
+const ring=addMesh(new THREE.TorusGeometry(2.25,.065,10,64),material(0x24cfff,.3,{emissive:0x087bff,emissiveIntensity:1.3}),0,.1,0);ring.rotation.x=Math.PI/2;
+const enemies=[];let shots=[],game=false,ended=false,score=0,health=100,yaw=0,sx=0,sy=0,vertical=0,jumping=false,last=0,lastShot=0,lastPower=0;
+function setCharacter(i){selected=i;const fresh=fighter(roster[i]);player.clear();while(fresh.children.length)player.add(fresh.children[0]);document.querySelector('#profileFace').textContent=roster[i].face;document.querySelectorAll('.charCard').forEach((c,n)=>c.classList.toggle('selected',n===i))}
+const cards=document.querySelector('#cards');roster.forEach((c,i)=>{const b=document.createElement('button');b.className='charCard'+(!i?' selected':'');b.innerHTML=`<div class="portrait">${c.face}</div><span>${c.name}</span>`;b.onclick=()=>{if(!game){setCharacter(i);toast(c.name+' selecionado · '+c.power)}};cards.appendChild(b)});
+function toast(t){const e=document.querySelector('#toast');e.textContent=t;e.style.display='block';clearTimeout(toast.timer);toast.timer=setTimeout(()=>e.style.display='none',1500)}
+function modal(title,body){document.querySelector('#modalTitle').textContent=title;document.querySelector('#modalBody').innerHTML=body;document.querySelector('#modal').style.display='flex'}
+document.querySelector('#modalClose').onclick=()=>document.querySelector('#modal').style.display='none';
+const panels={'LOJA':'<p>Loja de roupas, visuais e equipamentos cosméticos.</p><p>🪙 Moedas: 0 · 💎 Cristais: 0</p>','PERSONAGENS':'<p>Escolha seu herói no painel de personagens.</p>','ARMAS':'<p>⚔ Lançador de energia<br>🛡 Escudo de plasma<br>✦ Poder especial</p>','MOCHILA':'<p>🎒 Sua mochila aparecerá aqui durante a partida.</p>','MISSÕES':'<p>★ Explore a arena<br>★ Encontre os adversários<br>★ Complete o desafio</p>','EVENTOS':'<p>🏆 Evento de estreia: Desafio Nexus.</p>','COFRE':'<p>Seu cofre está pronto para receber recompensas.</p>','PET':'<p>🐾 Companheiro Nexus — em breve.</p>','COLEÇÃO':'<p>Personagens e visuais desbloqueados.</p>'};
+document.querySelectorAll('[data-panel]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-panel]').forEach(x=>x.classList.remove('active'));b.classList.add('active');modal(b.dataset.panel,panels[b.dataset.panel]||'<p>Em preparação.</p>')});
+function spawn(){enemies.forEach(e=>scene.remove(e.obj));enemies.length=0;for(let i=0;i<8;i++){const obj=fighter(roster[(i+2)%roster.length]);const a=i*Math.PI/4,dist=27+(i%3)*8;obj.position.set(Math.sin(a)*dist,0,Math.cos(a)*dist);scene.add(obj);enemies.push({obj,hp:3,alive:true,speed:1.7+i*.1,next:0})}}
+function hud(){document.querySelector('#healthfill').style.width=health+'%';document.querySelector('#healthtext').textContent=Math.ceil(health)+' / 100';document.querySelector('#score').textContent='Pontos: '+score;document.querySelector('#enemyCount').textContent='Adversários: '+enemies.filter(e=>e.alive).length}
+function endGame(win){ended=true;game=false;document.querySelector('#gamecontrols').style.display='none';document.querySelector('#cameraHint').style.display='none';document.querySelector('#gamehud').style.display='none';document.querySelector('#bottomnav').style.display='flex';document.querySelector('#leftmenu').style.display='flex';document.querySelector('#rightpanel').style.display='block';document.querySelector('#brand').style.display='block';modal(win?'VITÓRIA!':'FIM DE JOGO',`<p>${win?'Você venceu a arena Nexus!':'Sua energia acabou. Tente novamente!'}</p><p>Pontuação: ${score}</p><button class="action" id="again">JOGAR NOVAMENTE</button>`);document.querySelector('#again').onclick=()=>{document.querySelector('#modal').style.display='none';startGame()}}
+function startGame(){score=0;health=100;ended=false;game=true;yaw=0;sx=sy=0;player.position.set(0,0,0);spawn();shots.forEach(s=>scene.remove(s.obj));shots=[];document.querySelector('#modal').style.display='none';document.querySelector('#gamehud').style.display='flex';document.querySelector('#gamecontrols').style.display='flex';document.querySelector('#cameraHint').style.display='block';document.querySelector('#bottomnav').style.display='none';document.querySelector('#leftmenu').style.display='none';document.querySelector('#rightpanel').style.display='none';document.querySelector('#brand').style.display='none';hud()}
+document.querySelector('#start').onclick=startGame;
+function shoot(power=false){if(!game||ended)return;const now=performance.now();if(power&&now-lastPower<4500){toast('Poder recarregando');return}if(!power&&now-lastShot<260)return;if(power)lastPower=now;else lastShot=now;let target=null,nearest=power?36:28;for(const e of enemies){if(!e.alive)continue;const d=player.position.distanceTo(e.obj.position);if(d<nearest){nearest=d;target=e}}if(!target){toast('Nenhum adversário por perto');return}const orb=addMesh(new THREE.SphereGeometry(power?.42:.23,12,10),material(power?0xb46bff:0xffdf57,.25,{emissive:power?0x792dff:0xff8a00,emissiveIntensity:1.7}),player.position.x,player.position.y+1.6,player.position.z);shots.push({obj:orb,target,speed:power?32:27,damage:power?3:1})}
+document.querySelector('#attack').onpointerdown=e=>{e.preventDefault();shoot(false)};document.querySelector('#energy').onpointerdown=e=>{e.preventDefault();shoot(true)};
+document.querySelector('#jump').onpointerdown=e=>{e.preventDefault();if(game&&!jumping){jumping=true;vertical=7.5}};
+const stick=document.querySelector('#stick'),knob=document.querySelector('#knob');let stickId=null;
+function moveStick(e){const r=stick.getBoundingClientRect(),dx=e.clientX-r.left-r.width/2,dy=e.clientY-r.top-r.height/2,m=Math.hypot(dx,dy),lim=35,x=m>lim?dx/m*lim:dx,y=m>lim?dy/m*lim:dy;sx=x/lim;sy=y/lim;knob.style.transform=`translate(${x}px,${y}px)`}
+stick.onpointerdown=e=>{stickId=e.pointerId;stick.setPointerCapture(stickId);moveStick(e)};stick.onpointermove=e=>{if(e.pointerId===stickId)mo
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -733,84 +898,5 @@ const renderer=new THREE.WebGLRenderer({antialias:true});
 renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
 renderer.setSize(innerWidth,innerHeight);
 renderer.shadowMap.enabled=true;
-renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-renderer.outputColorSpace=THREE.SRGBColorSpace;
-renderer.toneMapping=THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure=1;
-game.appendChild(renderer.domElement);
-
-cena.add(new THREE.HemisphereLight(0xdaf3ff,0x52613b,2));
-const sol=new THREE.DirectionalLight(0xffffff,2);
-sol.position.set(-25,45,20);
-sol.castShadow=true;
-sol.shadow.mapSize.set(1024,1024);
-cena.add(sol);
-
-const mat=(c,r=.8)=>new THREE.MeshStandardMaterial({color:c,roughness:r});
-const verde=mat(0x438b43),tronco=mat(0x70452b);
-const folhas=mat(0x207d45),parede=mat(0xd1b68b);
-const telhado=mat(0x87483d);
-
-function adicionar(geo,m,x,y,z){
- const o=new THREE.Mesh(geo,m);
- o.position.set(x,y,z);
- o.castShadow=true;o.receiveShadow=true;
- cena.add(o);return o;
-}
-
-adicionar(new THREE.PlaneGeometry(180,180),verde,0,0,0).rotation.x=-Math.PI/2;
-const grade=new THREE.GridHelper(180,45,0x315f36,0x57844a);
-grade.position.y=.025;cena.add(grade);
-
-function caixa(w,h,d,m,x,y,z){
- return adicionar(new THREE.BoxGeometry(w,h,d),m,x,y,z);
-}
-function arvore(x,z){
- const g=new THREE.Group();
- const t=new THREE.Mesh(new THREE.CylinderGeometry(.25,.4,2.2,9),tronco);
- t.position.y=1.1;g.add(t);
- const f=new THREE.Mesh(new THREE.ConeGeometry(1.6,3.5,9),folhas);
- f.position.y=3.3;g.add(f);
- t.castShadow=f.castShadow=true;
- g.position.set(x,0,z);cena.add(g);
-}
-function casa(x,z){
- caixa(7,3.5,6,parede,x,1.75,z);
- const tel=caixa(8,1,7,telhado,x,4,z);
- tel.rotation.z=.08;
- caixa(1.4,2.2,.15,tronco,x,1.1,z-3.08);
- const janela=mat(0x7bd7ec,.3);
- caixa(1.2,1.1,.2,janela,x-2,2,z-3.1);
- caixa(1.2,1.1,.2,janela,x+2,2,z-3.1);
-}
-for(let i=0;i<65;i++){
- const x=(Math.random()-.5)*150,z=(Math.random()-.5)*150;
- if(Math.abs(x)<14&&Math.abs(z)<14)continue;
- arvore(x,z);
-}
-casa(-23,-18);casa(24,-24);casa(-30,25);
-casa(31,26);casa(5,39);casa(-48,-3);
-
-function especial(){
- if(!iniciou||acabou||performance.now()-tempoEspecial<4500)return;
- tempoEspecial=performance.now();
- inimigos.forEach(e=>{
-  if(e.vivo&&jogador.position.distanceTo(e.obj.position)<9){
-   e.vida-=65;pontos+=20;
-   e.barra.scale.x=Math.max(0,e.vida/100);
-   if(e.vida<=0){
-    e.vivo=false;e.obj.visible=false;pontos+=80;
-   }
-  }
- });
- document.getElementById("ajuda").textContent="PODER ESPECIAL!";
- atualizarHUD();
- if(inimigos.every(e=>!e.vivo))mensagemFim(true);
-}
-
-function pular(){
- if(!iniciou||acabou||pulando
-</script>
-</body>
-</html>
+renderer.shadowMap.type=THREE.PCFSoftS
 
