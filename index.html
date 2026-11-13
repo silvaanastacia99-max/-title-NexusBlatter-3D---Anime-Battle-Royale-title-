@@ -54,7 +54,32 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#08152b;col
  #rightpanel{right:6px;bottom:84px;width:calc(100% - 126px);max-width:245px;padding:7px}
  #rightpanel h3{font-size:10px}.portrait{height:45px;font-size:24px}.charCard{font-size:9px;padding:3px}
  #bottomnav{left:4px;right:4px;bottom:4px;gap:3px}.navBtn{padding:10px 1px;font-size:8px}#start{min-width:82px;padding:11px 6px;font-size:13px}
-}
+}<h1>NEXUSBLATTER 3D</h1>
+  <p>ANIME BATTLE ROYALE</p>
+  <p>ESCOLHA SEU PERSONAGEM</p>
+  <div id="listaHerois">
+   <button class="heroi selecionado" data-heroi="Naruto">🍥 NARUTO<small>Rasengan</small></button>
+   <button class="heroi" data-heroi="Sasuke">⚡ SASUKE<small>Chidori</small></button>
+   <button class="heroi" data-heroi="Nami">🌊 NAMI<small>Tempestade</small></button>
+   <button class="heroi" data-heroi="Zoro">⚔️ ZORO<small>Corte triplo</small></button>
+   <button class="heroi" data-heroi="Luffy">👒 LUFFY<small>Golpe elástico</small></button>
+   <button class="heroi" data-heroi="Goku">🔥 GOKU<small>Energia</small></button>
+   <button class="heroi" data-heroi="Vegeta">💥 VEGETA<small>Explosão</small></button>
+   <button class="heroi" data-heroi="Tanjiro">☀️ TANJIRO<small>Respiração solar</small></button>
+   <button class="heroi" data-heroi="Nezuko">🌸 NEZUKO<small>Poder demoníaco</small></button>
+   <button class="heroi" data-heroi="Ichigo">🗡️ ICHIGO<small>Getsuga</small></button>
+  </div>
+  <p id="descricao">Escolha seu herói e entre na batalha!</p>
+  <button id="jogar">ENTRAR NO JOGO</button>
+ </div>
+</div>
+
+<script type="module">
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
+
+const canvas=document.createElement("canvas");
+document.body.insertBefore(canvas,document.body.firstChild);
+       
 </style>
 </head>
 <body>
