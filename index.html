@@ -752,3 +752,13 @@ function shoot(power=false){
  );
 
  const direction=new THREE.Vector3(
+const alvo=new THREE.Vector3(
+   jogador.position.x-Math.sin(cameraAngulo)*8,
+   jogador.position.y+5,
+   jogador.position.z-Math.cos(cameraAngulo)*8
+  );
+  camera.position.lerp(alvo,1-Math.exp(-5*dt));
+  camera.lookAt(jogador.po
+</script>
+</body>
+</html
